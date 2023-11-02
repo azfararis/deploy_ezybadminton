@@ -1,0 +1,1 @@
+web: gunicorn ezybadminton.wsgi --log-file -

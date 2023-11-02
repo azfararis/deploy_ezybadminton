@@ -1,0 +1,162 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Index</title>
+<style>
+    body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+}
+
+header {
+    background-color: #333;
+    color: #fff;
+    padding: 10px;
+    text-align: center;
+}
+
+header h1 {
+    margin: 0;
+}
+
+nav ul {
+    list-style: none;
+    padding: 0;
+}
+
+nav li {
+    display: inline;
+    margin-right: 10px;
+}
+
+nav a {
+    color: #fff;
+    text-decoration: none;
+}
+
+section.content {
+    margin: 20px;
+}
+
+footer {
+    background-color: #333;
+    color: #fff;
+    text-align: center;
+    padding: 10px;
+}
+.booking-button {
+    display: inline-block;
+    padding: 10px 20px;
+    background-color: #007BFF;
+    color: #fff;
+    text-decoration: none;
+    border-radius: 5px;
+    font-size: 16px;
+    transition: background-color 0.3s;
+}
+
+.booking-button:hover {
+    background-color: #0056b3;
+}
+/* Add CSS for navigation */
+nav {
+    background-color: #333;
+    padding: 10px;
+    text-align: center;
+}
+
+nav ul {
+    list-style-type: none;
+    padding: 0;
+}
+
+nav li {
+    display: inline;
+    margin-right: 10px;
+}
+
+nav a {
+    color: #fff;
+    text-decoration: none;
+    font-size: 18px;
+}
+
+nav a:hover {
+    color: #007BFF;
+}
+body {
+    background-color: azure;    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center center; /* Center the background image */
+    background-attachment: fixed; /* Fixed background (optional) */
+    
+}
+img[src="/static/images/LCW.jpg"] {
+    max-width: 40%; /* Adjust the percentage as needed */
+    height: auto;
+}
+
+
+</style></head>
+<body class="homepage">
+    <header>
+        
+        <h1>Welcome to EzyBadminton</h1>
+        <nav>
+            <ul>
+                <li><a href="{% url 'booking_page' %}">Book a Court</a></li>
+                <li><a href="{% url 'booking_list' %}">Booking List</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <center>
+    <section class="content">
+        <h2>Play Badminton Anytime, Anywhere</h2>
+        <h3>"Introducing EzyBadminton: A haven for enthusiasts! 
+            With 10 pristine courts, our facility invites all to relish instant gameplay. <br>
+            Discover a space designed for pure badminton joy, where every moment is a chance to perfect your game. <br>
+            EzyBadminton - Where passion meets play! "Embrace the thrill of competition and the camaraderie of sportsmanship. <br>
+            EzyBadminton: Your gateway to a world of dynamic play and boundless fun!"</h3>
+        <p>Book a court and enjoy the game!</p> 
+
+        <img src="/static/images/LCW.jpg" alt="Image LCW">
+        <br><br>
+
+        <a href="{% url 'login_user' %}" class="booking-button">Booking Now!</a>
+    
+    
+        <h2>All Courts</h2>
+        <table>
+            <table border="1">
+
+            <thead>
+              <tr>
+                <th>Court ID</th>
+                <th>Price per Hour</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for court in courts %}
+                <tr>
+                  <td>{{ court.courtId }}</td>
+                  <td>{{ court.price_per_hour }}</td>
+                </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+    </section>
+
+    
+    </center>
+    
+
+    <footer>
+        &copy; 2023 EzyBadminton
+    </footer>
+</body>
+</html>

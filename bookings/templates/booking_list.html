@@ -1,0 +1,240 @@
+{% load static %}
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Booking List</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+
+        table {
+            border-collapse: collapse;
+            width: 100%;
+        }
+
+        th, td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+        }
+
+        th {
+            background-color: #007BFF;
+            color: #fff;
+        }
+
+        tr:nth-child(even) {
+            background-color: #f2f2f2b6;
+        }
+        tr:nth-child(odd) {
+            background-color: #756969ab;
+        }
+
+        h1 {
+            text-align: center;
+        }
+        header {
+        background-color: #333;
+        color: #fff;
+        padding: 10px;
+        text-align: center;
+    }
+    
+    header h1 {
+        margin: 0;
+    }
+    /* Add a CSS rule for buttons */
+button {
+    padding: 10px 20px;
+    font-size: 16px;
+    border: none;
+    background-color: #007BFF;
+    color: #fff;
+    cursor: pointer;
+    margin-right: 10px; /* Add some margin between buttons */
+}
+
+button:hover {
+    background-color: #0056b3;
+}
+/* Add CSS for update button */
+.update-btn {
+        padding: 10px 20px;
+        font-size: 16px;
+        border: none;
+        background-color: #28a745; /* Green color for update button */
+        color: #fff;
+        cursor: pointer;
+        margin-right: 10px; /* Add some margin between buttons */
+    }
+
+    .update-btn:hover {
+        background-color: #218838; /* Darker green on hover */
+    }
+
+    /* Add CSS for delete button */
+    .delete-btn {
+        padding: 10px 20px;
+        font-size: 16px;
+        border: none;
+        background-color: #ff0000; /* Black color for delete button */
+        color: #fff;
+        cursor: pointer;
+    }
+
+    .delete-btn:hover {
+        background-color: #9c0505; /*red on hover */
+    }
+    /* Add CSS for navigation */
+nav {
+    background-color: #333;
+    padding: 10px;
+    text-align: center;
+}
+
+nav ul {
+    list-style-type: none;
+    padding: 0;
+}
+
+nav li {
+    display: inline;
+    margin-right: 10px;
+}
+
+nav a {
+    color: #fff;
+    text-decoration: none;
+    font-size: 18px;
+}
+
+nav a:hover {
+    color: #007BFF;
+}
+body {
+    background-image: url('/static/images/LCW.jpg'); /* Adjust the path as needed */
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center center; /* Center the background image */
+    background-attachment: fixed; /* Fixed background (optional) */
+    
+}
+
+
+
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Welcome to EzyBadminton</h1>
+        {% if user.is_authenticated %}
+    <!-- Display content for authenticated user -->
+    <p>Welcome, {{ user.username }}!</p>
+{% else %}
+    <!-- Display content for anonymous user (not logged in) -->
+    <p>Please log in to book a court.</p>
+{% endif %}
+
+        <nav>
+            <ul>
+                <li><a href="{% url 'booking_page' %}">Book a Court</a></li>
+                <li><a href="{% url 'booking_list' %}">Booking List</a></li>
+
+            </ul>
+        </nav>
+        
+    </header>
+    <h1>Booking List</h1>
+    <table>
+        <thead>
+            <tr>
+                <th>User</th>
+                <th>Court</th>
+                <th>Date</th>
+                <th>Time</th>
+                <th>Hours</th>
+                <th>Total Price</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for booking in bookings %}
+                <tr>
+                    <td>{{ booking.userId }}</td>
+                    <td>{{ booking.courtId.courtId }}</td>
+                    <td>{{ booking.date }}</td>
+                    <td>{{ booking.time }}</td>
+                    <td>{{ booking.hours }}</td>
+                    <td>{{ booking.totalPrice }}</td>
+                    <td>
+                        <button class="update-btn" onclick="updateBooking('{{ booking.pk }}')">Update</button>
+                        <button class="delete-btn" onclick="deleteBooking('{{ booking.pk }}')">Delete</button>
+                    </td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    <script>
+        function updateBooking(bookingId) {
+            var newHours = prompt("Enter new hours for booking:", "1");
+    
+            if (newHours !== null) {
+                // Send an AJAX request to update the booking
+                $.ajax({
+                    type: "POST",
+                    url: "{% url 'update_booking' %}",
+                    data: {
+                        'booking_id': bookingId,
+                        'new_hours': newHours,
+                        'csrfmiddlewaretoken': '{{ csrf_token }}'
+                    },
+                    success: function(data) {
+                        // Handle success response (if any)
+                        alert("Booking updated successfully!");
+                        location.reload();  // Refresh the page
+                    },
+                    error: function() {
+                        // Handle errors (if any)
+                        alert("Error updating booking.");
+                    }
+                });
+            }
+        }
+    
+        function deleteBooking(bookingId) {
+            var confirmDelete = confirm("Are you sure you want to delete this booking?");
+    
+            if (confirmDelete) {
+                // Send an AJAX request to delete the booking
+                $.ajax({
+                    type: "POST",
+                    url: "{% url 'delete_booking' %}",
+                    data: {
+                        'booking_id': bookingId,
+                        'csrfmiddlewaretoken': '{{ csrf_token }}'
+                    },
+                    success: function(data) {
+                        // Handle success response (if any)
+                        alert("Booking deleted successfully!");
+                        location.reload();  // Refresh the page
+                    },
+                    error: function() {
+                        // Handle errors (if any)
+                        alert("Error deleting booking.");
+                    }
+                });
+            }
+        }
+    </script>
+    <footer>
+        &copy; 2023 EzyBadminton
+    </footer>
+</body>
+</html>
